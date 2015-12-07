@@ -1,32 +1,85 @@
 {% extends 'base.html' %}
+{% block styles %}
+{{super()}}
+<style type="text/css">
+.distance-field{ 
+	text-align:center;
+}
+.distance-value{
+	font-size:4em;
+}
+.distance-title{
+	font-weight:bold;
+}
+.logo-div img{
+	width:100%;
+	text-align:center;
+}
+</style>
+{% endblock %}
 {% block page_content %}
-    <h1>Welcome</h1>
-    <p>Current session: <span id="session-distnace"></span></p>
-    <p>Today: <span id="today-distance"></span></p>
-    <p>Total: <span id="total-distance"></span></p>
+<div class="row">
+	<div class="distance-field col-sm-4">
+		<span class="distance-title">Current session</span><br>
+		<span class="distance-distance">
+			<span id="session-distance" class="distance-value"></span>
+			km
+		</span>
+	</div>
+	<div class="distance-field col-sm-4">
+		<span class="distance-title">Today</span><br>
+		<span class="distance-distance">
+			<span id="today-distance" class="distance-value"></span>
+			km
+		</span>
+	</div>
+	<div class="distance-field col-sm-4">
+		<span class="distance-title">Total</span><br>
+		<span class="distance-distance">
+			<span id="total-distance" class="distance-value"></span>
+			km
+		</span>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-2">
+	</div>
+	<div class="logo-div col-sm-3">
+		<img src="{{url_for('static', filename='kuleuven.png')}}">
+	</div>
+	<div class="logo-div col-sm-2">
+		<img src="{{url_for('static', filename='VTK-schild.png')}}">
+	</div>
+	<div class="logo-div col-sm-3">
+		<img src="{{url_for('static', filename='leuven.jpg')}}">
+	</div>
+	<div class="col-sm-2">
+	</div>
+</div>
 {% endblock %}
 {% block scripts %}
-    {{ super() }}
-    <script type="text/javascript">
-        var lastUpdateTime = null;
-        function updateDistance() {
-            var currentUpdateTime = new Date();
-            lastUpdateTime = currentUpdateTime;
-            $.get('{{ url_for('get_distances') }}', function (res) {
-                if (currentUpdateTime == lastUpdateTime) {
-                    var totalDistance = res.total;
-                    var todayDistance = res.today;
-                    var currentSessionDistance = res.current_session;
-                    $('#session-distance').text(currentSessionDistance);
-                    $('#total-distance').text(totalDistance);
-                    $('#today-distance').text(todayDistance);
-                }
-            }, "json");
-        }
-        $(document).ready(function () {
-            window.setInterval(function () {
-                updateDistance();
-            }, 500);
-        });
-    </script>
+{{ super() }}
+<script type="text/javascript">
+var lastUpdateTime = null;
+function updateDistance() {
+	var currentUpdateTime = new Date();
+	lastUpdateTime = currentUpdateTime;
+	$.get('{{ url_for('get_distances') }}', function (res) {
+		console.log(res);
+		if (currentUpdateTime == lastUpdateTime) {
+			var totalDistance = res.total.toFixed(2);
+			var todayDistance = res.today.toFixed(2);
+			var currentSessionDistance = res.session.toFixed(2);
+			$('#session-distance').text(currentSessionDistance);
+			$('#total-distance').text(totalDistance);
+			$('#today-distance').text(todayDistance);
+		}
+	}, "json");
+}
+$(document).ready(function () {
+	window.setInterval(function () {
+		updateDistance();
+	}, 500);
+});
+</script>
 {% endblock %}

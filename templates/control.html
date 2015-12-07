@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+{% block page_content %}
+    <button type="button" class="btn btn-default" id="btnNewSession">Start new session</button>
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnNewSession').click(function () {
+                $.post('{{ url_for("start_new_session") }}', function (res) {
+                    console.log(res);
+                });
+            });
+        });
+    </script>
+{% endblock %}

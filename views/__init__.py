@@ -21,6 +21,12 @@ def get_distances():
     return jsonify(result)
 
 
-@app.route('/session/new')
+@app.route('/session/new', methods=['POST'])
 def start_new_session():
     utilities.start_new_session()
+    return jsonify({"ok": True})
+
+
+@app.route('/control')
+def control_page():
+    return render_template('control.html')

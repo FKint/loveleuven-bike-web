@@ -1,6 +1,6 @@
 import time
 
-from vtk_bike import mongo
+from vtk_bike import mongo, app
 
 
 class Bike:
@@ -13,12 +13,14 @@ class Bike:
         self.bike_id = bike_id
 
     def speed_received(self, speed):
-        current_time = time.time()
-        distance = speed * (current_time - self.last_time_received)
-        self.total_distance += distance
-        mongo.db.session.update({"_id": self.session_id}, {"$set": {self.bike_id: self.total_distance}})
-        self.last_speed_received = speed
-        self.last_time_received = current_time
+        with app.app_context():
+            current_time = time.time()
+            if self.last_time_received is not None:
+                distance = speed / 3600.* (current_time - self.last_time_received)
+                self.total_distance += distance
+                res = mongo.db.sessions.update({"_id": self.session_id}, {"$set": {self.bike_id: self.total_distance}})
+            self.last_speed_received = speed
+            self.last_time_received = current_time
 
     def get_total_distance(self):
         return self.total_distance

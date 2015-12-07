@@ -14,4 +14,4 @@ from views import *
 
 if __name__ == '__main__':
     utilities.start_thread()
-    app.run()
+    app.run(host='0.0.0.0')

@@ -1,2 +1,2 @@
-address = "/dev/arduino1"
-baud = 115200
+address = "/dev/arduino"
+baud = 9600

@@ -5,18 +5,27 @@
 {% block title %}
 Bike for Leuven
 {% endblock %}
-{#{% block navbar %}
-      {{nav.navbar.render()}}
-{% endblock %}#}
+{% block styles %}
+{{super()}}
+<style type="text/css">
+body{
+	background-color:rgb(29,141,176);
+}
+#banner{
+	width:100%;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
-    {% block messages %}
-    {% for category, message in get_flashed_messages(with_categories=true) %}
-    <div class="alert alert-{{ category }}">{{ message }}</div>
-    {% endfor %}
-    {% endblock %}
-    {% block page_content %}
-    {% endblock %}
+	<div class="row">
+		<div class="col-xs-12" style="text-align:center">
+			<img id="banner" src="{{url_for('static', filename='LoveLeuven.png')}}" />
+		</div>
+	</div>
+	{% block page_content %}
+	{% endblock %}
 </div>
 {% endblock %}
 
