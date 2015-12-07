@@ -41,8 +41,6 @@ def get_overall_distance():
     total_distance = mongo.db.sessions.aggregate(
         [{"$group": {"_id": 1, "total_distance_bike_1": {"$sum": "$bike1"},
                      "total_distance_bike_2": {"$sum": "$bike2"}}}])
-    if total_distance.count() == 0:
-        return 0
     res = total_distance.next()
     total_distance = res['total_distance_bike_1'] + res['total_distance_bike_2']
     return total_distance
@@ -56,8 +54,6 @@ def get_today_distance():
         [{"$match": {"timestamp": {"$gte": today_start_timestamp, "$lt": today_end_timestamp}}},
          {"$group": {"_id": 1, "total_distance_bike_1": {"$sum": "$bike1"},
                      "total_distance_bike_2": {"$sum": "$bike2"}}}])
-    if today_distance.count() == 0:
-        return 0
     res = today_distance.next()
     today_distance = res['total_distance_bike_1'] + res['total_distance_bike_2']
 
