@@ -6,6 +6,7 @@
     <p>Total: <span id="total-distance"></span></p>
 {% endblock %}
 {% block scripts %}
+    {{ super() }}
     <script type="text/javascript">
         var lastUpdateTime = null;
         function updateDistance() {
@@ -25,7 +26,7 @@
         $(document).ready(function () {
             window.setInterval(function () {
                 updateDistance();
-            });
+            }, 500);
         });
     </script>
 {% endblock %}

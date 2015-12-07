@@ -10,8 +10,8 @@ from vtk_bike import app, mongo
 
 
 def action():
+    app.bikes = {1: Bike("bike1"), 2: Bike("bike2")}
     ser = serial.Serial(local_config.address, local_config.baud)
-    app.bikes = {1: Bike(), 2: Bike()}
     while True:
         line = ser.readline().strip()
         print('received line', line)
@@ -40,7 +40,9 @@ def start_thread():
 def get_overall_distance():
     total_distance = mongo.db.sessions.aggregate(
         [{"$group": {"_id": 1, "total_distance_bike_1": {"$sum": "$bike1"},
-                     "total_distance_bike_2": {"$sum", "$bike2"}}}])
+                     "total_distance_bike_2": {"$sum": "$bike2"}}}])
+    if total_distance.count() == 0:
+        return 0
     res = total_distance.next()
     total_distance = res['total_distance_bike_1'] + res['total_distance_bike_2']
     return total_distance
@@ -51,11 +53,14 @@ def get_today_distance():
         datetime.datetime.strptime(datetime.datetime.now().strftime("%d/%m/%Y"), "%d/%m/%Y").timetuple())
     today_end_timestamp = today_start_timestamp + 3600 * 24
     today_distance = mongo.db.sessions.aggregate(
-        [{"$match": {"$timestamp": {"$gte": today_start_timestamp, "$lt": today_end_timestamp}}},
+        [{"$match": {"timestamp": {"$gte": today_start_timestamp, "$lt": today_end_timestamp}}},
          {"$group": {"_id": 1, "total_distance_bike_1": {"$sum": "$bike1"},
-                     "total_distance_bike_2": {"$sum", "$bike2"}}}])
+                     "total_distance_bike_2": {"$sum": "$bike2"}}}])
+    if today_distance.count() == 0:
+        return 0
     res = today_distance.next()
     today_distance = res['total_distance_bike_1'] + res['total_distance_bike_2']
+
     return today_distance
 
 
