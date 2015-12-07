@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block page_content %}
+    <h1>Welcome</h1>
+    <p>You have biked <span id="distance">0</span> km.</p>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var lastUpdateTime = null;
+        function updateDistance() {
+            var currentUpdateTime = new Date();
+            lastUpdateTime = currentUpdateTime;
+            $.get('{{ url_for('get_distance') }}', function (res) {
+                if (currentUpdateTime == lastUpdateTime) {
+                    $('#distance').text(res);
+                }
+            }, "json");
+        }
+        $(document).ready(function () {
+            window.setInterval(function () {
+                updateDistance();
+            });
+        });
+    </script>
+{% endblock %}

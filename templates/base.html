@@ -1,0 +1,25 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/google.html" as google %}
+{% from "bootstrap/pagination.html" import render_pagination %}
+{% block title %}
+Bike for Leuven
+{% endblock %}
+{% block navbar %}
+    {#  {{nav.navbar.render()}} #}
+{% endblock %}
+{% block content %}
+<div class="container">
+    {% block messages %}
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-{{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endblock %}
+    {% block page_content %}
+    {% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+{%endblock%}
