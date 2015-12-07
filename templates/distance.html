@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block page_content %}
     <h1>Welcome</h1>
-    <p>You have biked <span id="distance">0</span> km.</p>
+    <p>Current session: <span id="session-distnace"></span></p>
+    <p>Today: <span id="today-distance"></span></p>
+    <p>Total: <span id="total-distance"></span></p>
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
@@ -9,9 +11,14 @@
         function updateDistance() {
             var currentUpdateTime = new Date();
             lastUpdateTime = currentUpdateTime;
-            $.get('{{ url_for('get_distance') }}', function (res) {
+            $.get('{{ url_for('get_distances') }}', function (res) {
                 if (currentUpdateTime == lastUpdateTime) {
-                    $('#distance').text(res);
+                    var totalDistance = res.total;
+                    var todayDistance = res.today;
+                    var currentSessionDistance = res.current_session;
+                    $('#session-distance').text(currentSessionDistance);
+                    $('#total-distance').text(totalDistance);
+                    $('#today-distance').text(todayDistance);
                 }
             }, "json");
         }
