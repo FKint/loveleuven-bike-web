@@ -1,2 +1,2 @@
-address = "/dev/arduino"
+address = "/dev/ttyACM"
 baud = 9600
